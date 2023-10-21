@@ -2,10 +2,6 @@ import * as TJS from "./Three JS/build/three.module.js"
 import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
 import { earth_moon, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
-import { EffectComposer } from './Three JS/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from './Three JS/examples/jsm/postprocessing/RenderPass.js'
-import { UnrealBloomPass } from './Three JS/examples/jsm/postprocessing/UnrealBloomPass.js';
-
 //Windows height and width
 const winH = window.innerHeight
 const winW = window.innerWidth
