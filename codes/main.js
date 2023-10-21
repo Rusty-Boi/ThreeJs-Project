@@ -1,16 +1,8 @@
-<<<<<<< Updated upstream
-import * as TJS from "./Three JS/build/three.module.js"
-import { makePlanet, spaceTexture } from "./obj.js"
-
-
-=======
 // import * as TJS from "./Three JS/build/three.module.js"
 import * as TJS from "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
-
 import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
-import { earth_moon, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
->>>>>>> Stashed changes
 //Windows height and width
 const winH = window.innerHeight
 const winW = window.innerWidth
@@ -20,54 +12,88 @@ const main_scene = new TJS.Scene()
 
 //make camera PerspectiveCamera(fov, aspect ratio, near, far)
 const cam = new TJS.PerspectiveCamera(70, winW/winH, 0.1, 100000)
-cam.position.setZ(750)
-cam.position.setY(400)
-cam.lookAt(0,0,0)
 
-//object texture
-const earthTexture = new TJS.TextureLoader().load('./assets/textures/earthTexture.png')
-const sunTexture = new TJS.TextureLoader().load('./assets/textures/sunTexture.jpeg')
-const mercuryTexture = new TJS.TextureLoader().load('./assets/textures/mercuryTexture.jpg')
-const venusTexture = new TJS.TextureLoader().load('./assets/textures/venusTexture.jpg')
-const marsTexture = new TJS.TextureLoader().load('./assets/textures/marsTexture.jpg')
-const saturnTexture = new TJS.TextureLoader().load('./assets/textures/saturnTexture.jpg')
-const saturnRingTexture = new TJS.TextureLoader().load('./assets/textures/saturnRingTexture.jpg')
+cam.position.setZ(1000)
+cam.position.setY(400)
+cam.lookAt(0, 0, 0)
 
 //make objects
+const mercuryObj = new TJS.Object3D()
+mercuryObj.add(planet_mercury)
 
-const sun = makePlanet(100, sunTexture)
-const planet_mercury = makePlanet(10, mercuryTexture)
-const planet_venus = makePlanet(14, venusTexture)
-const planet_earth = makePlanet(18, earthTexture)
-const planet_mars = makePlanet(17, marsTexture)
+const venusObj = new TJS.Object3D()
+venusObj.add(planet_venus)
 
-// const planet3 = makePlanet(20)
+const earthObj = new TJS.Object3D()
+earthObj.add(planet_earth)
+const moonObj = new TJS.Object3D()
+moonObj.add(earth_moon)
+planet_earth.add(moonObj)
 
-planet_earth.position.setX(400)
-planet_mercury.position.setX(200)
-planet_venus.position.setX(300)
-planet_mars.position.setX(500)
-// planet3.position.setX(300)
+const marsObj = new TJS.Object3D()
+marsObj.add(planet_mars)
 
+const jupiterObj = new TJS.Object3D()
+jupiterObj.add(planet_jupiter)
+
+const saturnObj = new TJS.Object3D()
+saturnObj.add(planet_saturn, saturn_ring)
+
+const uranusObj = new TJS.Object3D()
+uranusObj.add(planet_uranus, uranus_ring)
+
+// const mercury_orbit = makeOrbit(249.6,250.4)
+// main_scene.add(mercury_orbit)
+
+//set planet position
+saturn_ring.rotateX(Math.PI * 0.4)
+
+//set background texture
 main_scene.background = spaceTexture
-sun.add(planet_mercury, planet_venus, planet_earth, planet_mars)
-main_scene.add(sun)
+main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj)
 
+//set sun light
+const pointLight = new TJS.PointLight(0xffffff, 2, 3000)
+main_scene.add(pointLight)
 
 //make renderer
 const renderer = new TJS.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setSize(winW, winH)
 renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
+const orbit = new OrbitControls(cam, renderer.domElement)
+orbit.update()
 
 //animate objects
 function animate() {
     requestAnimationFrame(animate)
-    sun.rotation.y += 0.0005  
-    planet_mercury.rotation.y += 0.05
-    planet_earth.rotation.y += 0.005
-    planet_venus.rotation.y += 0.01
-    planet_mars.rotation.y += 0.006
+
+    sun.rotateY(0.0004)
+
+    planet_mercury.rotateY(0.0004)
+    mercuryObj.rotateY(0.004)  
+
+    planet_venus.rotateY(0.0002)
+    venusObj.rotateY(0.0015)
+
+    planet_earth.rotateY(0.007)
+    earthObj.rotateY(0.001)
+    moonObj.rotateY(0.009)
+
+    planet_mars.rotateY(0.008)
+    marsObj.rotateY(0.0008)
+
+    planet_jupiter.rotateY(0.0004)
+    jupiterObj.rotateY(0.0002)
+
+    planet_saturn.rotateY(0.0038)
+    saturnObj.rotateY(0.00009)
+
+    planet_uranus.rotateY(0.003)
+    uranusObj.rotateY(0.00004)
+
+    // composer.render()
+
     renderer.render(main_scene, cam)
 }
 
