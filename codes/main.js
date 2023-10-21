@@ -27,8 +27,9 @@ main_scene.add(planet1, planet2, planet3)
 const renderer = new TJS.WebGLRenderer()
 renderer.setSize(window.innerWidth, window.innerHeight)
 renderer.setPixelRatio(window.devicePixelRatio)
-
 document.body.appendChild(renderer.domElement)
+
+//animate objects
 function animate() {
     requestAnimationFrame(animate)
     planet1.rotation.y += 0.005
