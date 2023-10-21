@@ -1,6 +1,6 @@
 import * as TJS from "./Three JS/build/three.module.js"
 import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
-import { planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_venus, saturn_ring, spaceTexture, sun } from "./obj.js"
+import { earth_moon, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_venus, saturn_ring, spaceTexture, sun } from "./obj.js"
 
 //Windows height and width
 const winH = window.innerHeight
@@ -12,7 +12,7 @@ const main_scene = new TJS.Scene()
 //make camera PerspectiveCamera(fov, aspect ratio, near, far)
 const cam = new TJS.PerspectiveCamera(70, winW/winH, 0.1, 100000)
 
-cam.position.setZ(750)
+cam.position.setZ(1000)
 cam.position.setY(400)
 cam.lookAt(0, 0, 0)
 
@@ -23,6 +23,7 @@ const venusObj = new TJS.Object3D()
 venusObj.add(planet_venus)
 const earthObj = new TJS.Object3D()
 earthObj.add(planet_earth)
+planet_earth.add(earth_moon)
 const marsObj = new TJS.Object3D()
 marsObj.add(planet_mars)
 const jupiterObj = new TJS.Object3D()
@@ -31,14 +32,15 @@ const saturnObj = new TJS.Object3D()
 saturnObj.add(planet_saturn, saturn_ring)
 
 //set planet position
-planet_mercury.position.setX(200)
-planet_venus.position.setX(300)
-planet_earth.position.setX(400)
-planet_mars.position.setX(500)
-planet_jupiter.position.setX(700)
-planet_saturn.position.setX(900)
-saturn_ring.position.setX(900)
-saturn_ring.rotateX(Math.PI / 1.65)
+planet_mercury.position.setX(250)
+planet_venus.position.setX(350)
+planet_earth.position.setX(450)
+earth_moon.position.setX(20)
+planet_mars.position.setX(550)
+planet_jupiter.position.setX(650)
+planet_saturn.position.setX(750)
+saturn_ring.position.setX(750)
+saturn_ring.rotateX(Math.PI * 0.4)
 
 
 //set background texture
@@ -61,25 +63,25 @@ orbit.update()
 function animate() {
     requestAnimationFrame(animate)
 
-    sun.rotateY(0.0005)
+    sun.rotateY(0.0004)
 
-    planet_mercury.rotateY(0.05)
-    mercuryObj.rotateY(0.008)  
+    planet_mercury.rotateY(0.0004)
+    mercuryObj.rotateY(0.004)  
 
-    planet_venus.rotateY(0.01)
-    venusObj.rotateY(0.007)
+    planet_venus.rotateY(0.0002)
+    venusObj.rotateY(0.0015)
 
     planet_earth.rotateY(0.007)
-    earthObj.rotateY(0.004)
+    earthObj.rotateY(0.001)
 
     planet_mars.rotateY(0.008)
-    marsObj.rotateY(0.003)
+    marsObj.rotateY(0.0008)
 
-    planet_jupiter.rotateY(0.001)
-    jupiterObj.rotateY(0.0005)
+    planet_jupiter.rotateY(0.0004)
+    jupiterObj.rotateY(0.0002)
 
-    planet_saturn.rotateY(0.001)
-    saturnObj.rotateY(0.0004)
+    planet_saturn.rotateY(0.0038)
+    saturnObj.rotateY(0.00009)
 
     renderer.render(main_scene, cam)
 }
