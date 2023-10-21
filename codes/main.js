@@ -1,5 +1,5 @@
 import * as TJS from "./Three JS/build/three.module.js"
-import { makePlanet, spaceTexture } from "./obj.js"
+import { makePlanet, makePlanetRing, makeSun, spaceTexture } from "./obj.js"
 
 
 //Windows height and width
@@ -13,37 +13,50 @@ const main_scene = new TJS.Scene()
 const cam = new TJS.PerspectiveCamera(70, winW/winH, 0.1, 100000)
 cam.position.setZ(750)
 cam.position.setY(400)
-cam.lookAt(0,0,0)
-
-//object texture
-const earthTexture = new TJS.TextureLoader().load('./assets/textures/earthTexture.png')
-const sunTexture = new TJS.TextureLoader().load('./assets/textures/sunTexture.jpeg')
-const mercuryTexture = new TJS.TextureLoader().load('./assets/textures/mercuryTexture.jpg')
-const venusTexture = new TJS.TextureLoader().load('./assets/textures/venusTexture.jpg')
-const marsTexture = new TJS.TextureLoader().load('./assets/textures/marsTexture.jpg')
-const saturnTexture = new TJS.TextureLoader().load('./assets/textures/saturnTexture.jpg')
-const saturnRingTexture = new TJS.TextureLoader().load('./assets/textures/saturnRingTexture.jpg')
+cam.lookAt(0, 0, 0)
 
 //make objects
+const mercuryObj = new TJS.Object3D()
+const venusObj = new TJS.Object3D()
+const earthObj = new TJS.Object3D()
+const marsObj = new TJS.Object3D()
+const jupiter = new TJS.Object3D()
+const saturnObj = new TJS.Object3D()
 
-const sun = makePlanet(100, sunTexture)
+const sun = makeSun(sunTexture)
 const planet_mercury = makePlanet(10, mercuryTexture)
+
+mercuryObj.add(planet_mercury)
 const planet_venus = makePlanet(14, venusTexture)
 const planet_earth = makePlanet(18, earthTexture)
 const planet_mars = makePlanet(17, marsTexture)
+const planet_jupiter = makePlanet(40)
+const planet_saturn = makePlanet(30, saturnTexture)
+const saturn_ring = makePlanetRing(34, saturnRingTexture)
 
-// const planet3 = makePlanet(20)
-
+//set planet position
 planet_earth.position.setX(400)
 planet_mercury.position.setX(200)
 planet_venus.position.setX(300)
 planet_mars.position.setX(500)
-// planet3.position.setX(300)
+planet_saturn.position.setX(800)
+saturn_ring.position.setX(800)
 
+//set background texture
 main_scene.background = spaceTexture
-sun.add(planet_mercury, planet_venus, planet_earth, planet_mars)
+
+//add planets to sun orbit
+main_scene.add(
+    planet_venus, 
+    planet_earth, 
+    planet_mars, 
+    planet_saturn, 
+    saturn_ring)
+main_scene.add(mercuryObj)
 main_scene.add(sun)
 
+const pointLight = new TJS.PointLight(0xffffff, 2, 300)
+main_scene.add(pointLight)
 
 //make renderer
 const renderer = new TJS.WebGLRenderer()
@@ -59,6 +72,7 @@ function animate() {
     planet_earth.rotation.y += 0.005
     planet_venus.rotation.y += 0.01
     planet_mars.rotation.y += 0.006
+    mercuryObj.rotateY(0.005)
     renderer.render(main_scene, cam)
 }
 
