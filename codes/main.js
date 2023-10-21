@@ -1,7 +1,16 @@
+<<<<<<< Updated upstream
 import * as TJS from "./Three JS/build/three.module.js"
 import { makePlanet, spaceTexture } from "./obj.js"
 
 
+=======
+// import * as TJS from "./Three JS/build/three.module.js"
+import * as TJS from "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+
+import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
+import { earth_moon, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+
+>>>>>>> Stashed changes
 //Windows height and width
 const winH = window.innerHeight
 const winW = window.innerWidth
