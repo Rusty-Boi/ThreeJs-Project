@@ -23,7 +23,9 @@ const venusObj = new TJS.Object3D()
 venusObj.add(planet_venus)
 const earthObj = new TJS.Object3D()
 earthObj.add(planet_earth)
-planet_earth.add(earth_moon)
+const moonObj = new TJS.Object3D()
+moonObj.add(earth_moon)
+planet_earth.add(moonObj)
 const marsObj = new TJS.Object3D()
 marsObj.add(planet_mars)
 const jupiterObj = new TJS.Object3D()
@@ -73,6 +75,7 @@ function animate() {
 
     planet_earth.rotateY(0.007)
     earthObj.rotateY(0.001)
+    moonObj.rotateY(0.003)
 
     planet_mars.rotateY(0.008)
     marsObj.rotateY(0.0008)
