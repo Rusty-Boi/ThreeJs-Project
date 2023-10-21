@@ -1,6 +1,6 @@
 import * as TJS from "./Three JS/build/three.module.js"
 import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
-import { earth_moon, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
 //Windows height and width
 const winH = window.innerHeight
@@ -41,25 +41,11 @@ saturnObj.add(planet_saturn, saturn_ring)
 const uranusObj = new TJS.Object3D()
 uranusObj.add(planet_uranus, uranus_ring)
 
+// const mercury_orbit = makeOrbit(249.6,250.4)
+// main_scene.add(mercury_orbit)
+
 //set planet position
-planet_mercury.position.setX(250)
-
-planet_venus.position.setX(350)
-
-planet_earth.position.setX(450)
-
-earth_moon.position.setX(20)
-
-planet_mars.position.setX(550)
-
-planet_jupiter.position.setX(650)
-
-planet_saturn.position.setX(750)
-saturn_ring.position.setX(750)
 saturn_ring.rotateX(Math.PI * 0.4)
-
-planet_uranus.position.setX(850)
-uranus_ring.position.setX(850)
 
 //set background texture
 main_scene.background = spaceTexture
@@ -71,7 +57,7 @@ main_scene.add(pointLight)
 
 //make renderer
 const renderer = new TJS.WebGLRenderer()
-renderer.setSize(window.innerWidth, window.innerHeight)
+renderer.setSize(winW, winH)
 renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 const orbit = new OrbitControls(cam, renderer.domElement)
@@ -91,7 +77,7 @@ function animate() {
 
     planet_earth.rotateY(0.007)
     earthObj.rotateY(0.001)
-    moonObj.rotateY(0.003)
+    moonObj.rotateY(0.009)
 
     planet_mars.rotateY(0.008)
     marsObj.rotateY(0.0008)
