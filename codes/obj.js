@@ -28,8 +28,8 @@ function makePlanet(radius, texture_image){
 }
 
 function makePlanetRing(radius, ring_texture){
-    const ringGeo = new TJS.RingGeometry(radius)
-    const mats = new TJS.MeshStandardMaterial({map: ring_texture})
+    const ringGeo = new TJS.RingGeometry(radius, 30, 32)
+    const mats = new TJS.MeshBasicMaterial({map: ring_texture, side: TJS.DoubleSide})
     const ring = new TJS.Mesh(ringGeo, mats)
     return ring
 }
@@ -41,4 +41,4 @@ export const planet_earth = makePlanet(9, earthTexture)
 export const planet_mars = makePlanet(8, marsTexture)
 export const planet_jupiter = makePlanet(20, jupiterTexture)
 export const planet_saturn = makePlanet(15, saturnTexture)
-export const saturn_ring = makePlanetRing(30, saturnRingTexture)
+export const saturn_ring = makePlanetRing(20, saturnRingTexture)

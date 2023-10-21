@@ -1,6 +1,6 @@
 import * as TJS from "./Three JS/build/three.module.js"
 import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
-import { planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_venus, spaceTexture, sun } from "./obj.js"
+import { planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_venus, saturn_ring, spaceTexture, sun } from "./obj.js"
 
 //Windows height and width
 const winH = window.innerHeight
@@ -28,7 +28,7 @@ marsObj.add(planet_mars)
 const jupiterObj = new TJS.Object3D()
 jupiterObj.add(planet_jupiter)
 const saturnObj = new TJS.Object3D()
-saturnObj.add(planet_saturn)
+saturnObj.add(planet_saturn, saturn_ring)
 
 //set planet position
 planet_mercury.position.setX(200)
@@ -37,6 +37,8 @@ planet_earth.position.setX(400)
 planet_mars.position.setX(500)
 planet_jupiter.position.setX(700)
 planet_saturn.position.setX(900)
+saturn_ring.position.setX(900)
+saturn_ring.rotateX(Math.PI / 1.65)
 
 
 //set background texture
