@@ -1,15 +1,17 @@
 import * as TJS from "../../Three JS/build/three.module.js"
 import { OrbitControls } from "../../Three JS/examples/jsm/controls/OrbitControls.js"
-import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 import { EffectComposer } from "../Three JS/examples/jsm/postprocessing/EffectComposer.js"
 import { RenderPass } from "../Three JS/examples/jsm/postprocessing/RenderPass.js"
 import { UnrealBloomPass } from "../Three JS/examples/jsm/postprocessing/UnrealBloomPass.js"
 import { GUI } from "../Three JS/examples/jsm/libs/dat.gui.module.js"
 
+import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_neptune, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+
 
 //Windows height and width
 const winH = window.innerHeight
 const winW = window.innerWidth
+const textureLoader = new TJS.TextureLoader()
 
 //make scene
 const main_scene = new TJS.Scene()
@@ -46,6 +48,9 @@ saturnObj.add(planet_saturn, saturn_ring)
 const uranusObj = new TJS.Object3D()
 uranusObj.add(planet_uranus, uranus_ring)
 
+const neptuneObj = new TJS.Object3D()
+neptuneObj.add(planet_neptune)
+
 // const mercury_orbit = makeOrbit(249.6,250.4)
 // main_scene.add(mercury_orbit)
 
@@ -55,14 +60,39 @@ saturn_ring.rotateX(Math.PI * 0.4)
 //set background texture
 // main_scene.background = spaceTexture
 
-main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj)
+main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj, neptuneObj)
+
+const skybox_geo = new TJS.BoxGeometry(10000, 10000, 10000)
+const skybox_materials = []
+function skyboxMaterialPath(){
+  const materialPath = []
+  const basePath = './assets/skybox/'
+  const face = ['front', 'back', 'top', 'bottom', 'right', 'left']
+  // const name = 'bluecloud'
+  // const face = ['ft', 'bk', 'up', 'dn', 'rt', 'lf']
+  const fileType = '.png'
+  for(let i in face){
+    materialPath.push(`${basePath}${face[i]}${fileType}`)
+  }
+  return materialPath
+}
+
+function skyboxMaterialLoad(path){
+  for(let i in path){
+    skybox_materials.push(new TJS.MeshBasicMaterial({map: textureLoader.load(path[i]),  side: TJS.DoubleSide}))
+  }
+}
+
+skyboxMaterialLoad(skyboxMaterialPath())
+const skybox = new TJS.Mesh(skybox_geo, skybox_materials)
+main_scene.add(skybox)
 
 //set sun light
 const pointLight = new TJS.PointLight(0xffffff, 2, 3000)
 main_scene.add(pointLight)
 
 //make renderer
-const renderer = new TJS.WebGLRenderer()
+const renderer = new TJS.WebGLRenderer({antialias: true})
 renderer.setSize(winW, winH)
 renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
@@ -81,8 +111,7 @@ const bloomPass = new UnrealBloomPass(
     0.51
 )
 
-bloomPass.ignoreObjects = [planet_earth, planet_mercury, planet_mars, planet_venus, planet_jupiter, planet_saturn]
-
+bloomPass.ignoreObjects = [planet_earth, planet_mercury, planet_mars, planet_venus, planet_jupiter, planet_saturn, skybox]
 composer.addPass(bloomPass)
 
 var bloomParams = {
@@ -91,13 +120,11 @@ var bloomParams = {
     threshold: 0.51,
 };
 
-
-
 var gui = new GUI();
 gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
   bloomPass.strength = value
 })
-gui.add(bloomParams, 'radius', 0, 2).onChange(function (value) {
+gui.add(bloomParams, 'radius', 0, 5).onChange(function (value) {
   bloomPass.radius = value
 })
 gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
@@ -113,7 +140,7 @@ gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
 // })
 
 renderer.toneMapping = TJS.LinearToneMapping
-renderer.toneMappingExposure = 1.01
+renderer.toneMappingExposure = 1.04
 
 //animate objects
 function animate() {
@@ -143,8 +170,11 @@ function animate() {
     planet_uranus.rotateY(0.003)
     uranusObj.rotateY(0.00004)
 
-    composer.render()
+    planet_neptune.rotateY(0.032)
+    neptuneObj.rotateY(0.0001)
 
+    composer.render()
+    renderer.setSize(winW, winH)
     // renderer.render(main_scene, cam)
 }
 

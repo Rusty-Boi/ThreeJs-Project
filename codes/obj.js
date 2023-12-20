@@ -1,4 +1,6 @@
-import * as TJS from "../../Three JS/build/three.module.js"
+import * as TJS from "../Three JS/build/three.module.js"
+
+// import * as TJS from 'three'
 
 const sunTexture = new TJS.TextureLoader().load('./assets/textures/sunTexture.jpeg')
 const mercuryTexture = new TJS.TextureLoader().load('./assets/textures/mercuryTexture.jpg')
@@ -11,6 +13,7 @@ const saturnRingTexture = new TJS.TextureLoader().load('./assets/textures/saturn
 const jupiterTexture = new TJS.TextureLoader().load('./assets/textures/jupiterTexture.jpg')
 const uranusTexture = new TJS.TextureLoader().load('./assets/textures/uranusTexture.jpg')
 const uranusRingTexture = new TJS.TextureLoader().load('./assets/textures/uranusRingTexture.png')
+const neptuneTexture = new TJS.TextureLoader().load('./assets/textures/neptuneTexture.jpg')
 //background texture
 export const spaceTexture  = new TJS.TextureLoader().load('./assets/textures/spaceTexture.jpg')
 
@@ -25,7 +28,7 @@ function makeSun(texture){
 
 function makePlanet(radius, texture_image, pos){
     const sphere = new TJS.SphereGeometry(radius, 30, 30)
-    const material = new TJS.MeshStandardMaterial({map: texture_image})
+    const material = new TJS.MeshPhongMaterial({map: texture_image})
     const planet = new TJS.Mesh(sphere, material)
     planet.position.setX(pos)
     return planet
@@ -58,3 +61,4 @@ export const planet_saturn = makePlanet(15, saturnTexture, 750)
 export const saturn_ring = makePlanetRing(20, 30, saturnRingTexture, 750)
 export const planet_uranus = makePlanet(12, uranusTexture, 850)
 export const uranus_ring = makePlanetRing(14, 24, uranusRingTexture, 850)
+export const planet_neptune = makePlanet(12, neptuneTexture, 950)
