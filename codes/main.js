@@ -4,6 +4,8 @@ import { EffectComposer } from "../Three JS/examples/jsm/postprocessing/EffectCo
 import { RenderPass } from "../Three JS/examples/jsm/postprocessing/RenderPass.js"
 import { UnrealBloomPass } from "../Three JS/examples/jsm/postprocessing/UnrealBloomPass.js"
 import { GUI } from "../Three JS/examples/jsm/libs/dat.gui.module.js"
+import {CSS2DRenderer} from "../Three JS/examples/jsm/renderers/CSS2DRenderer.js"
+import { planet_data } from "../data.js"
 
 import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_neptune, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
@@ -26,30 +28,38 @@ cam.lookAt(0, 0, 0)
 //make objects
 const mercuryObj = new TJS.Object3D()
 mercuryObj.add(planet_mercury)
+planet_mercury.name = 'mercury'
 
 const venusObj = new TJS.Object3D()
 venusObj.add(planet_venus)
+planet_venus.name = 'venus'
 
 const earthObj = new TJS.Object3D()
 earthObj.add(planet_earth)
 const moonObj = new TJS.Object3D()
 moonObj.add(earth_moon)
 planet_earth.add(moonObj)
+planet_earth.name = 'earth'
 
 const marsObj = new TJS.Object3D()
 marsObj.add(planet_mars)
+planet_mars.name = 'mars'
 
 const jupiterObj = new TJS.Object3D()
 jupiterObj.add(planet_jupiter)
+planet_jupiter.name = 'jupiter'
 
 const saturnObj = new TJS.Object3D()
 saturnObj.add(planet_saturn, saturn_ring)
+planet_saturn.name = 'saturn'
 
 const uranusObj = new TJS.Object3D()
 uranusObj.add(planet_uranus, uranus_ring)
+planet_uranus.name = 'uranus'
 
 const neptuneObj = new TJS.Object3D()
 neptuneObj.add(planet_neptune)
+planet_neptune.name = 'neptune'
 
 // const mercury_orbit = makeOrbit(249.6,250.4)
 // main_scene.add(mercury_orbit)
@@ -60,7 +70,7 @@ saturn_ring.rotateX(Math.PI * 0.4)
 //set background texture
 // main_scene.background = spaceTexture
 
-main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj, neptuneObj)
+// main_scene.add(mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj, neptuneObj)
 
 const skybox_geo = new TJS.BoxGeometry(10000, 10000, 10000)
 const skybox_materials = []
@@ -79,20 +89,20 @@ function skyboxMaterialPath(){
 
 function skyboxMaterialLoad(path){
   for(let i in path){
-    skybox_materials.push(new TJS.MeshBasicMaterial({map: textureLoader.load(path[i]),  side: TJS.DoubleSide}))
+    skybox_materials.push(new TJS.MeshBasicMaterial({map: textureLoader.load(path[i]), side: TJS.DoubleSide}))
   }
 }
 
 skyboxMaterialLoad(skyboxMaterialPath())
 const skybox = new TJS.Mesh(skybox_geo, skybox_materials)
-main_scene.add(skybox)
+main_scene.add(sun, skybox, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj, neptuneObj)
 
 //set sun light
 const pointLight = new TJS.PointLight(0xffffff, 2, 3000)
 main_scene.add(pointLight)
 
 //make renderer
-const renderer = new TJS.WebGLRenderer({antialias: true})
+const renderer = new TJS.WebGLRenderer()
 renderer.setSize(winW, winH)
 renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
@@ -100,47 +110,106 @@ const orbit = new OrbitControls(cam, renderer.domElement)
 orbit.update()
 
 //post-processing
-const composer = new EffectComposer(renderer)
-const renderPass = new RenderPass(main_scene, cam)
-composer.addPass(renderPass)
 
+//bloom objects
+const bloomComposer = new EffectComposer(renderer)
+const renderPass = new RenderPass(main_scene, cam)
 const bloomPass = new UnrealBloomPass(
     new TJS.Vector2(window.innerWidth, window.innerHeight),
     1,
-    0.75,
+    1.4,
     0.51
 )
 
-bloomPass.ignoreObjects = [planet_earth, planet_mercury, planet_mars, planet_venus, planet_jupiter, planet_saturn, skybox]
-composer.addPass(bloomPass)
+bloomComposer.addPass(renderPass)
+bloomComposer.addPass(bloomPass)
 
-var bloomParams = {
-    strength: 1,
-    radius: 0.75,
-    threshold: 0.51,
-};
+//debugging GUI
 
-var gui = new GUI();
-gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
-  bloomPass.strength = value
-})
-gui.add(bloomParams, 'radius', 0, 5).onChange(function (value) {
-  bloomPass.radius = value
-})
-gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
-  bloomPass.threshold = value
-})
+// var bloomParams = {
+//     strength: 1,
+//     radius: 1.4,
+//     threshold: 0.51,
+// };
 
-// var toneMapParam = {
-//     exposure: 1.04
-// }
-
-// gui.add(toneMapParam, 'exposure', 0, 5).onChange(function(value){
-//     renderer.toneMappingExposure = value
+// var gui = new GUI();
+// gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
+//   bloomPass.strength = value
+// })
+// gui.add(bloomParams, 'radius', 0, 5).onChange(function (value) {
+//   bloomPass.radius = value
+// })
+// gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
+//   bloomPass.threshold = value
 // })
 
 renderer.toneMapping = TJS.LinearToneMapping
 renderer.toneMappingExposure = 1.04
+
+const Overlay = new CSS2DRenderer()
+Overlay.setSize(winW, winH)
+Overlay.domElement.classList.add('overlay', 'card')
+Overlay.domElement.style.position = 'absolute'
+// Overlay.domElement.style.top = '80%'
+Overlay.domElement.style.bottom = '0%'
+
+
+// window.addEventListener('keydown', function(event){
+//   if(event.key === '1'){
+//     document.body.appendChild(Overlay.domElement)
+//   }
+// })
+
+
+
+function getData(name){
+  let cardDesc
+  let cardTitle 
+  for(let i in planet_data){
+    if(name == planet_data[i].name){
+      cardDesc = planet_data[i].desc
+      cardTitle = planet_data[i].title
+      Overlay.domElement.innerHTML = `
+        <div class="card container-fluid">
+          <div class="card-body">
+          <h5 class="card-title">${cardTitle}</h5>
+          <p class="card-text">${cardDesc}</p>
+          </div>
+          <div class="btn btn-secondary close-btn" onclick="removeUI()">
+              X Close
+          </div>
+        </div>
+      `
+      document.body.appendChild(Overlay.domElement)
+    }
+  }
+  
+}
+
+const raycaster = new TJS.Raycaster();
+const mouse = new TJS.Vector2();
+
+window.addEventListener('click', onMouseClick);
+
+function onMouseClick(event) {
+    // Mendapatkan koordinat mouse dalam bentuk normalized device coordinates (NDC)
+    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
+
+    // Set ray dari kamera melalui mouse
+    raycaster.setFromCamera(mouse, cam);
+
+    // Dapatkan objek yang terkena oleh ray
+    const intersects = raycaster.intersectObjects(main_scene.children, true);
+
+    if (intersects.length > 0) {
+        // Objek diklik, tampilkan informasi di UI
+        const clickedObject = intersects[0].object;
+        getData(clickedObject.name)
+        
+    }
+}
+
 
 //animate objects
 function animate() {
@@ -173,9 +242,8 @@ function animate() {
     planet_neptune.rotateY(0.032)
     neptuneObj.rotateY(0.0001)
 
-    composer.render()
-    renderer.setSize(winW, winH)
-    // renderer.render(main_scene, cam)
+    bloomComposer.render()
+    Overlay.render(main_scene, cam)
 }
 
 animate()
