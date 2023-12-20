@@ -54,6 +54,7 @@ saturn_ring.rotateX(Math.PI * 0.4)
 
 //set background texture
 // main_scene.background = spaceTexture
+
 main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj)
 
 //set sun light
@@ -90,19 +91,29 @@ var bloomParams = {
     threshold: 0.51,
 };
 
+
+
 var gui = new GUI();
 gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
-  bloomPass.strength = value;
-});
+  bloomPass.strength = value
+})
 gui.add(bloomParams, 'radius', 0, 2).onChange(function (value) {
-  bloomPass.radius = value;
-});
+  bloomPass.radius = value
+})
 gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
-  bloomPass.threshold = value;
-});
+  bloomPass.threshold = value
+})
 
-// renderer.toneMapping = TJS.CineonToneMapping
-// renderer.toneMappingExposure = 1.5
+// var toneMapParam = {
+//     exposure: 1.04
+// }
+
+// gui.add(toneMapParam, 'exposure', 0, 5).onChange(function(value){
+//     renderer.toneMappingExposure = value
+// })
+
+renderer.toneMapping = TJS.LinearToneMapping
+renderer.toneMappingExposure = 1.01
 
 //animate objects
 function animate() {
