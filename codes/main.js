@@ -61,10 +61,12 @@ const neptuneObj = new TJS.Object3D()
 neptuneObj.add(planet_neptune)
 planet_neptune.name = 'neptune'
 
+sun.name = 'sun'
+
 function createOrbits(){
   let inrad = 249.6
   let outrad = 250.4
-  for(let i in planet_data){
+  for(let i = 0; i < 8; i++){
     const orbit = makeOrbit((inrad - 1) + i * 100, (outrad + 1) + i * 100)
     // const orbitHitboxMaterial = new TJS.MeshBasicMaterial({color: 0xffffff,})  
     // const orbitHitbox = makeOrbit((inrad - 10) + i * 100, (outrad + 10) + i * 100)
@@ -175,21 +177,37 @@ Overlay.domElement.style.bottom = '0%'
 
 function getData(name){
   let cardDesc
-  let cardTitle 
+  let cardTitle
+  let cardDesc2 
+  let idxNo
   for(let i in planet_data){
     if(name == planet_data[i].name){
+      idxNo = parseInt(i) + 1
       cardDesc = planet_data[i].desc
+      cardDesc2 = planet_data[i].desc2
       cardTitle = planet_data[i].title
       Overlay.domElement.innerHTML = `
-        <div class="card content-container">
-          <div class="card-body">
-          <h5 class="card-title">${cardTitle}</h5>
-          <p class="card-text">${cardDesc}</p>
+      <div class="content">
+      <div class="outer-square">
+          
+          <img class="gambar" src="${planet_data[i].imgPath}" alt="Merkurius">
+          <h4>${cardTitle}</h4>
+          <h1>${idxNo}</h1>
+          <p class="subHead">Tata Surya</p>
+          <hr>
+  
+          <div class="inner-square left">
+              <p class="text1">${cardDesc}</p>
           </div>
-          <div class="btn btn-secondary close-btn" onclick="removeUI()">
-              X Close
+          
+          <div class="inner-square right">
+              <p class="text2">${cardDesc2}</p>
+                  <a href="https://spaceplace.nasa.gov/all-about-mercury/en/">https://spaceplace.nasa.gov/all-about-mercury/en/</a>
           </div>
-        </div>
+      </div>
+      <div class="btn btn-secondary close-btn" onclick="removeUI()">
+        X Close
+      </div>
       `
       document.body.appendChild(Overlay.domElement)
     }
