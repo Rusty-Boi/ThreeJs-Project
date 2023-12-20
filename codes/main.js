@@ -1,5 +1,5 @@
-import * as TJS from "./Three JS/build/three.module.js"
-import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
+import * as TJS from "../../Three JS/build/three.module.js"
+import { OrbitControls } from "../../Three JS/examples/jsm/controls/OrbitControls.js"
 import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
 //Windows height and width
