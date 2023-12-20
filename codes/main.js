@@ -61,8 +61,19 @@ const neptuneObj = new TJS.Object3D()
 neptuneObj.add(planet_neptune)
 planet_neptune.name = 'neptune'
 
-// const mercury_orbit = makeOrbit(249.6,250.4)
-// main_scene.add(mercury_orbit)
+function createOrbits(){
+  let inrad = 249.6
+  let outrad = 250.4
+  for(let i in planet_data){
+    const orbit = makeOrbit((inrad - 1) + i * 100, (outrad + 1) + i * 100)
+    // const orbitHitboxMaterial = new TJS.MeshBasicMaterial({color: 0xffffff,})  
+    // const orbitHitbox = makeOrbit((inrad - 10) + i * 100, (outrad + 10) + i * 100)
+    // orbitHitbox.material = orbitHitboxMaterial
+    orbit.name = planet_data[i].name  
+    main_scene.add(orbit)
+  }
+}
+createOrbits()
 
 //set planet position
 saturn_ring.rotateX(Math.PI * 0.4)
@@ -170,7 +181,7 @@ function getData(name){
       cardDesc = planet_data[i].desc
       cardTitle = planet_data[i].title
       Overlay.domElement.innerHTML = `
-        <div class="card container-fluid">
+        <div class="card content-container">
           <div class="card-body">
           <h5 class="card-title">${cardTitle}</h5>
           <p class="card-text">${cardDesc}</p>
@@ -186,18 +197,33 @@ function getData(name){
   
 }
 
-const raycaster = new TJS.Raycaster();
-const mouse = new TJS.Vector2();
+const raycaster = new TJS.Raycaster()
+const mouse = new TJS.Vector2()
 
-window.addEventListener('click', onMouseClick);
+window.addEventListener('click', onMouseClick)
+// window.addEventListener('mousemove', changeColor, false)
+
+function getMouseCoord(e){
+  mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+  mouse.y = - (e.clientY / window.innerHeight) * 2 + 1;
+  raycaster.setFromCamera(mouse, cam)
+}
+
+// function changeColor(event){
+//   getMouseCoord(event)
+//   const intersects = raycaster.intersectObjects(main_scene.children, true);
+//   let Hovered
+//     if (intersects.length > 0) {
+//         Hovered = intersects[0].object
+//         Hovered.material.opacity = 1.0
+//     } else {
+//       Hovered.material.opacity = 0.1
+//     }
+// }
 
 function onMouseClick(event) {
     // Mendapatkan koordinat mouse dalam bentuk normalized device coordinates (NDC)
-    mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-    mouse.y = - (event.clientY / window.innerHeight) * 2 + 1;
-
-    // Set ray dari kamera melalui mouse
-    raycaster.setFromCamera(mouse, cam);
+    getMouseCoord(event)
 
     // Dapatkan objek yang terkena oleh ray
     const intersects = raycaster.intersectObjects(main_scene.children, true);
@@ -206,7 +232,6 @@ function onMouseClick(event) {
         // Objek diklik, tampilkan informasi di UI
         const clickedObject = intersects[0].object;
         getData(clickedObject.name)
-        
     }
 }
 

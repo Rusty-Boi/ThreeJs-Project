@@ -43,8 +43,8 @@ function makePlanetRing(radius, out_radius, ring_texture, pos){
 }
 
 export function makeOrbit(in_radius, out_radius){
-    const ringGeo = new TJS.RingGeometry(in_radius, out_radius, 60)
-    const mats = new TJS.MeshBasicMaterial({color: '#d3d3d3', side: TJS.DoubleSide})
+    const ringGeo = new TJS.RingGeometry(in_radius, out_radius, 360)
+    const mats = new TJS.MeshBasicMaterial({color: '#d3d3d3', side: TJS.DoubleSide, opacity: 0.4, transparent: true})
     const orbits = new TJS.Mesh(ringGeo, mats)
     orbits.rotateX(Math.PI/2)
     return orbits

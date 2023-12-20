@@ -33,16 +33,19 @@ export const planet_data = [
     {
         name: 'saturn',
         title: 'Saturnus',
-        desc: ''
+        desc: `Planet Saturnus adalah planet planet terbesar kedua yang memiliki cincin paling indah. cincin ini terbuat dari kelompok cincin kecil yang mengelilingi saturnus, yang terbuat dari bongkahan es dan batu. 
+        Seperti Jupiter, Saturnus juga adalah raksasa gas yang sebagian besar adalah bola hidrogen dan helium, memiliki atmosfer yang tebal.`
     },
     {
         name: 'uranus',
         title: 'Uranus',
-        desc: ''
+        desc: `Planet Uranus adalah planet yang terbuat dari air, metana dan cairan amonia diatas pusat berbatu kecil. Metana inilah yang membuat Neptunus menjadi berwarna biru. 
+        Seperti Jupiter dan Saturnus, atmosfer milik Uranus terbuat dari hidrogen dan helium. Uranus juga memiliki cincin seperti Saturnus, namun cincin yang dimilikinya terlihat samar. Cincin bagian dalamnya sempit dan gelap.
+        Selain Venus, Uranus juga berputar ke arah yang berlawanan dan satu - satunya planet yang berputar di sisinya.`
     },
     {
         name: 'neptune',
         title: 'Neptunus',
-        desc: ''
+        desc: `Planet Neptunus adalah planet terakhir yang gelap, dingin dan sangat berangin. Neptunus sangat mirip dengan Uranus, yang adalah taksasa es yang mirip dengan raksasa gas terbuat dari kabut tebal, air, cairan amonia dan metana. Atmosfernya pun terbuat dari hidrogen, helium dan metana. Sama halnya dengan Uranus, karena ada metana membuat Neptunus berwarna biru. Neptunus juga memiliki cincin, namun sangat sulit untuk dilihat. `
     }
 ]
