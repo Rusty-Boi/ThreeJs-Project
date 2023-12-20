@@ -1,6 +1,11 @@
 import * as TJS from "../../Three JS/build/three.module.js"
 import { OrbitControls } from "../../Three JS/examples/jsm/controls/OrbitControls.js"
 import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+import { EffectComposer } from "../Three JS/examples/jsm/postprocessing/EffectComposer.js"
+import { RenderPass } from "../Three JS/examples/jsm/postprocessing/RenderPass.js"
+import { UnrealBloomPass } from "../Three JS/examples/jsm/postprocessing/UnrealBloomPass.js"
+import { GUI } from "../Three JS/examples/jsm/libs/dat.gui.module.js"
+
 
 //Windows height and width
 const winH = window.innerHeight
@@ -48,7 +53,7 @@ uranusObj.add(planet_uranus, uranus_ring)
 saturn_ring.rotateX(Math.PI * 0.4)
 
 //set background texture
-main_scene.background = spaceTexture
+// main_scene.background = spaceTexture
 main_scene.add(sun, mercuryObj, venusObj, earthObj, marsObj, jupiterObj, saturnObj, uranusObj)
 
 //set sun light
@@ -62,6 +67,42 @@ renderer.setPixelRatio(window.devicePixelRatio)
 document.body.appendChild(renderer.domElement)
 const orbit = new OrbitControls(cam, renderer.domElement)
 orbit.update()
+
+//post-processing
+const composer = new EffectComposer(renderer)
+const renderPass = new RenderPass(main_scene, cam)
+composer.addPass(renderPass)
+
+const bloomPass = new UnrealBloomPass(
+    new TJS.Vector2(window.innerWidth, window.innerHeight),
+    1,
+    0.75,
+    0.51
+)
+
+bloomPass.ignoreObjects = [planet_earth, planet_mercury, planet_mars, planet_venus, planet_jupiter, planet_saturn]
+
+composer.addPass(bloomPass)
+
+var bloomParams = {
+    strength: 1,
+    radius: 0.75,
+    threshold: 0.51,
+};
+
+var gui = new GUI();
+gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
+  bloomPass.strength = value;
+});
+gui.add(bloomParams, 'radius', 0, 2).onChange(function (value) {
+  bloomPass.radius = value;
+});
+gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
+  bloomPass.threshold = value;
+});
+
+// renderer.toneMapping = TJS.CineonToneMapping
+// renderer.toneMappingExposure = 1.5
 
 //animate objects
 function animate() {
@@ -91,9 +132,9 @@ function animate() {
     planet_uranus.rotateY(0.003)
     uranusObj.rotateY(0.00004)
 
-    // composer.render()
+    composer.render()
 
-    renderer.render(main_scene, cam)
+    // renderer.render(main_scene, cam)
 }
 
 animate()
