@@ -1,7 +1,12 @@
-// import * as TJS from "./Three JS/build/three.module.js"
-import * as TJS from "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
-import { OrbitControls } from "./Three JS/examples/jsm/controls/OrbitControls.js"
-import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+import * as TJS from "../node_modules/three/build/three.module.js"
+// import { OrbitControls } from "../node_modules/three/examples/jsm/controls/OrbitControls.js"
+// import { EffectComposer } from "../Three JS/examples/jsm/postprocessing/EffectComposer.js"
+// import { RenderPass } from "../Three JS/examples/jsm/postprocessing/RenderPass.js"
+// import { UnrealBloomPass } from "../Three JS/examples/jsm/postprocessing/UnrealBloomPass.js"
+// import { GUI } from "../Three JS/examples/jsm/libs/dat.gui.module.js"
+
+import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_neptune, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+
 
 //Windows height and width
 const winH = window.innerHeight
@@ -64,6 +69,49 @@ document.body.appendChild(renderer.domElement)
 const orbit = new OrbitControls(cam, renderer.domElement)
 orbit.update()
 
+//post-processing
+const composer = new EffectComposer(renderer)
+const renderPass = new RenderPass(main_scene, cam)
+composer.addPass(renderPass)
+
+const bloomPass = new UnrealBloomPass(
+    new TJS.Vector2(window.innerWidth, window.innerHeight),
+    1,
+    0.75,
+    0.51
+)
+
+bloomPass.ignoreObjects = [planet_earth, planet_mercury, planet_mars, planet_venus, planet_jupiter, planet_saturn, skybox]
+composer.addPass(bloomPass)
+
+var bloomParams = {
+    strength: 1,
+    radius: 0.75,
+    threshold: 0.51,
+};
+
+var gui = new GUI();
+gui.add(bloomParams, 'strength', 0, 2).onChange(function (value) {
+  bloomPass.strength = value
+})
+gui.add(bloomParams, 'radius', 0, 5).onChange(function (value) {
+  bloomPass.radius = value
+})
+gui.add(bloomParams, 'threshold', 0, 1).onChange(function (value) {
+  bloomPass.threshold = value
+})
+
+// var toneMapParam = {
+//     exposure: 1.04
+// }
+
+// gui.add(toneMapParam, 'exposure', 0, 5).onChange(function(value){
+//     renderer.toneMappingExposure = value
+// })
+
+renderer.toneMapping = TJS.LinearToneMapping
+renderer.toneMappingExposure = 1.04
+
 //animate objects
 function animate() {
     requestAnimationFrame(animate)
@@ -94,7 +142,9 @@ function animate() {
 
     // composer.render()
 
-    renderer.render(main_scene, cam)
+    composer.render()
+    renderer.setSize(winW, winH)
+    // renderer.render(main_scene, cam)
 }
 
 animate()

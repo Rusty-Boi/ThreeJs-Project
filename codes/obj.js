@@ -1,5 +1,7 @@
-// import * as TJS from "./Three JS/build/three.module.js"
-import * as TJS from "https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.module.js"
+// import * as TJS from "../Three JS/build/three.module.js"
+import * as TJS from "../node_modules/three/build/three.module.js"
+
+// import * as TJS from 'three'
 
 const sunTexture = new TJS.TextureLoader().load('./assets/textures/sunTexture.jpeg')
 const mercuryTexture = new TJS.TextureLoader().load('./assets/textures/mercuryTexture.jpg')
