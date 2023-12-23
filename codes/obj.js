@@ -16,6 +16,7 @@ const uranusRingTexture = new TJS.TextureLoader().load('./assets/textures/uranus
 const neptuneTexture = new TJS.TextureLoader().load('./assets/textures/neptuneTexture.jpg')
 //background texture
 export const spaceTexture  = new TJS.TextureLoader().load('./assets/textures/spaceTexture.jpg')
+export const aster  = new TJS.TextureLoader().load('./assets/belt.png')
 
 //use this function to make planet object
 
@@ -50,6 +51,15 @@ export function makeOrbit(in_radius, out_radius){
     return orbits
 }
 
+export function makeAsteroid(in_radius, out_radius){
+    const ringGeo1 = new TJS.RingBufferGeometry(in_radius, out_radius, 100)
+    const mats1 = new TJS.MeshBasicMaterial({map:aster,side: TJS.DoubleSide, opacity: 0.7,transparent: true})
+    const belt = new TJS.Mesh(ringGeo1, mats1)
+    belt.rotateX(Math.PI/2)
+    return belt
+}
+
+
 export const sun = makeSun(sunTexture)
 export const planet_mercury = makePlanet(5, mercuryTexture, 250)
 export const planet_venus = makePlanet(7, venusTexture, 350)
@@ -62,3 +72,4 @@ export const saturn_ring = makePlanetRing(20, 30, saturnRingTexture, 750)
 export const planet_uranus = makePlanet(12, uranusTexture, 850)
 export const uranus_ring = makePlanetRing(14, 24, uranusRingTexture, 850)
 export const planet_neptune = makePlanet(12, neptuneTexture, 950)
+

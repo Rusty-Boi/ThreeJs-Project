@@ -7,7 +7,7 @@ import { GUI } from "../Three JS/examples/jsm/libs/dat.gui.module.js"
 import {CSS2DRenderer} from "../Three JS/examples/jsm/renderers/CSS2DRenderer.js"
 import { planet_data } from "../data.js"
 
-import { earth_moon, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_neptune, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
+import {aster, earth_moon, makeAsteroid, makeOrbit, planet_earth, planet_jupiter, planet_mars, planet_mercury, planet_neptune, planet_saturn, planet_uranus, planet_venus, saturn_ring, spaceTexture, sun, uranus_ring } from "./obj.js"
 
 
 //Windows height and width
@@ -76,6 +76,19 @@ function createOrbits(){
   }
 }
 createOrbits()
+
+// function createAsteroid(){
+//   let inrad = 125.7
+//   let outrad = 111.5
+//     const belt = makeAsteroid((inrad - 1) +5*100,+5*(outrad + 1))
+//     main_scene.add(belt)
+// }
+// createAsteroid()
+
+const belt = makeAsteroid(60+ 5*100, 5*126)
+main_scene.add(belt)
+
+
 
 //set planet position
 saturn_ring.rotateX(Math.PI * 0.4)
@@ -259,6 +272,7 @@ function animate() {
     requestAnimationFrame(animate)
 
     sun.rotateY(0.0004)
+    belt.rotateZ(-0.0009)
 
     planet_mercury.rotateY(0.0004)
     mercuryObj.rotateY(0.004)  
@@ -283,7 +297,7 @@ function animate() {
     uranusObj.rotateY(0.00004)
 
     planet_neptune.rotateY(0.032)
-    neptuneObj.rotateY(0.0001)
+    neptuneObj.rotateY(0.00001)
 
     bloomComposer.render()
     Overlay.render(main_scene, cam)
